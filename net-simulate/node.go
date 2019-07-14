@@ -12,7 +12,7 @@ type Node struct {
 }
 
 func newNode() *Node {
-	lastID++
+	lastID += 1
 	return &Node{id: lastID - 1,
 		receiver:    make(chan string),
 		connections: make(ConnectionMap)}
