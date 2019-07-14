@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// Returns the title of the given page content in HTML.
 func getTitle(content string) string {
 	i := strings.Index(content, "<title>")
 	j := strings.Index(content, "</title>")
@@ -17,6 +18,8 @@ func getTitle(content string) string {
 	return string(content[i+7 : j])
 }
 
+// A connection worker that takes an url from the input channel and outputs the
+// content of that web-page to the output channel.
 func connectionWorker(in <-chan string, out chan<- string) {
 	resp, err := http.Get(<-in)
 	if err != nil {
@@ -28,6 +31,8 @@ func connectionWorker(in <-chan string, out chan<- string) {
 	out <- string(contentInBytes)
 }
 
+// A parse worker that takes a web-page content from the input channel and
+// outputs the title of the page to the output channel.
 func parseWorker(in <-chan string, out chan<- string) {
 	content := <-in
 	out <- getTitle(content)

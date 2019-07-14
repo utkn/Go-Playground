@@ -15,12 +15,16 @@ type LinkedList struct {
 	size int
 }
 
+// Returns true if and only if the given index is valid.
 func (lst *LinkedList) checkIndex(index int) bool {
 	return index >= 0 && index < lst.size
 }
 
+// Adds an element at the end of the list.
 func (lst *LinkedList) Add(element interface{}) {
 	if lst.size == 0 {
+		// If there are no elements in the list, simply add the new
+		// element on the head.
 		lst.head = &node{element, nil}
 	} else {
 		lastNode, _ := lst.getNode(lst.size - 1)
@@ -29,6 +33,7 @@ func (lst *LinkedList) Add(element interface{}) {
 	lst.size++
 }
 
+// Returns the element at the given index.
 func (lst *LinkedList) Get(index int) (interface{}, error) {
 	node, err := lst.getNode(index)
 	if err != nil {
@@ -37,6 +42,7 @@ func (lst *LinkedList) Get(index int) (interface{}, error) {
 	return node.element, nil
 }
 
+// Removes the element at the given index.
 func (lst *LinkedList) Remove(index int) (oldVal interface{}, err error) {
 	node, err := lst.getNode(index)
 	if err != nil {
@@ -55,6 +61,7 @@ func (lst *LinkedList) Remove(index int) (oldVal interface{}, err error) {
 	return
 }
 
+// Returns the node object at the given index. Only used internally.
 func (lst *LinkedList) getNode(index int) (*node, error) {
 	if !lst.checkIndex(index) {
 		return nil, &Error{"Invalid index"}
@@ -67,6 +74,7 @@ func (lst *LinkedList) getNode(index int) (*node, error) {
 	return curr, nil
 }
 
+// Returns a string representation of the list.
 func (lst LinkedList) String() string {
 	curr := lst.head
 	elements := make([]string, lst.size)
