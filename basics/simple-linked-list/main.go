@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Go-Playground/learning/simple-linked-list/LinkedList"
+	"Go-Playground/basics/simple-linked-list/LinkedList"
 	"fmt"
 )
 
