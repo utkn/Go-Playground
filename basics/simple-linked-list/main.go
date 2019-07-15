@@ -1,12 +1,12 @@
 package main
 
 import (
-	"Go-Playground/basics/simple-linked-list/LinkedList"
+	"Go-Playground/basics/simple-linked-list/linkedlist"
 	"fmt"
 )
 
 func main() {
-	list := LinkedList.LinkedList{}
+	list := linkedlist.LinkedList{}
 	list.Add(10)
 	list.Add(20)
 	list.Add(30)
