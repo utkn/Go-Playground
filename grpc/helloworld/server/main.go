@@ -7,6 +7,7 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	"net"
+	"time"
 )
 
 type server struct{}
@@ -18,7 +19,10 @@ func (s *server) SayHello(ctx context.Context, request *pb.GreetRequest) (*pb.Gr
 }
 
 func (s *server) SayGoodbye(ctx context.Context, request *pb.GreetRequest) (*pb.GreetResponse, error) {
-	log.Printf("The server has received a SayGoodbye request.")
+	log.Printf("The server has received a SayGoodbye request from %s", request.Name)
+	// simulate a time-consuming request
+	time.Sleep(5 * time.Second)
+	log.Printf("The server has completed a SayGoodbye request from %s", request.Name)
 	return &pb.GreetResponse{Response: fmt.Sprintf("Goodbye, dear %v", request.Name)}, nil
 }
 

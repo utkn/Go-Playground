@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+message JoinRequest {
+    string name = 1;
+}
+
+message JoinResponse {
+    bool success = 1;
+    PlayerId playerId = 2;
+}
+
+message PlayerId {
+    int32 gameId = 1;
+    int32 player = 2;
+}
+
+message Action {
+    PlayerId playerId = 1;
+    int32 cell = 2;
+}
+
+message GameState {
+    bool finished = 1;
+    bool turn = 2;
+    repeated uint32 cells = 3 [packed=true];
+}
+
+service Game {
+    rpc JoinRandomGame(JoinRequest) returns (JoinResponse);
+    rpc GetGameState(PlayerId) returns (GameState);
+    rpc PutMark(Action) returns (GameState);
+}
