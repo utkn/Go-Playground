@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type Mark uint
 
 const (
@@ -26,4 +28,9 @@ type GameInstance struct {
 	names       [2]string
 	players     int
 	finished    bool
+}
+
+func (g GameInstance) String() string {
+	return fmt.Sprintf("Board:\n%v\nCurrentTurn: %v, Players: %v",
+		g.Board, g.currentTurn, g.players)
 }

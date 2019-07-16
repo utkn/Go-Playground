@@ -22,24 +22,6 @@ func checkBoard(b Board, turn int) bool {
 	return false
 }
 
-func (b Board) String() (out string) {
-	for row := 0; row < len(b); row++ {
-		for col := 0; col < len(b[row]); col++ {
-			cell := b[row][col]
-			switch cell {
-			case X:
-				out += "X"
-			case O:
-				out += "O"
-			case EMPTY:
-				out += "_"
-			}
-		}
-		out += "\n"
-	}
-	return
-}
-
 func (b *Board) reset() {
 	for row := 0; row < len(b); row++ {
 		for col := 0; col < len(b[row]); col++ {

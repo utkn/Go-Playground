@@ -1,7 +1,7 @@
 package main
 
 import (
-	pb "../game"
+	pb "Go-Playground/grpc/online-tic-tac-toe/game"
 	"context"
 	"errors"
 	"log"
@@ -10,21 +10,20 @@ import (
 
 type Server struct {
 	lastId        int
-	GameInstances map[int]GameInstance
+	GameInstances map[int](*GameInstance)
 	GameMutex     *sync.Mutex
 }
 
 func (s *Server) newGame() (*GameInstance, int) {
-	s.GameInstances[s.lastId] = GameInstance{}
-	i := s.GameInstances[s.lastId]
+	s.GameInstances[s.lastId] = &GameInstance{}
 	s.lastId++
-	return &i, s.lastId - 1
+	return s.GameInstances[s.lastId-1], s.lastId - 1
 }
 
 func (s *Server) findAvailableGame() (*GameInstance, int) {
 	for k, v := range s.GameInstances {
 		if v.players < 2 {
-			return &v, k
+			return v, k
 		}
 	}
 	return nil, 0
@@ -46,7 +45,7 @@ func (s *Server) JoinRandomGame(ctx context.Context, req *pb.JoinRequest) (*pb.J
 	}
 
 	availableGame.names[player] = req.Name
-	availableGame.players++
+	availableGame.players = availableGame.players + 1
 
 	return &pb.JoinResponse{
 		Success: !newGame,
@@ -57,7 +56,7 @@ func (s *Server) JoinRandomGame(ctx context.Context, req *pb.JoinRequest) (*pb.J
 }
 
 func (s *Server) GetGameState(ctx context.Context, req *pb.PlayerId) (*pb.GameState, error) {
-	log.Printf("Join request received from %v\n", req.Player)
+	log.Printf("Game state request received from %v\n", req.Player)
 	s.GameMutex.Lock()
 	defer s.GameMutex.Unlock()
 	gameInstance, ok := s.GameInstances[int(req.GameId)]
@@ -82,6 +81,7 @@ func (s *Server) GetGameState(ctx context.Context, req *pb.PlayerId) (*pb.GameSt
 }
 
 func (s *Server) PutMark(ctx context.Context, req *pb.Action) (*pb.GameState, error) {
+	log.Printf("Put mark request received from %v\n", req.PlayerId)
 	s.GameMutex.Lock()
 	defer s.GameMutex.Unlock()
 	gameInstance, ok := s.GameInstances[int(req.PlayerId.GameId)]
