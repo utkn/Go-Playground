@@ -63,8 +63,10 @@ func main() {
 			log.Fatal(err)
 		}
 
-		fmt.Println(gameState.Cells)
-		if gameState.Finished && gameState.Turn {
+		for i := 0; i < 3; i++ {
+			fmt.Printf("%v\n", gameState.Cells[(i*3):(i*3+3)])
+		}
+		if gameState.Finished && !gameState.Turn {
 			fmt.Println("You won!")
 			break
 		} else if gameState.Finished {
@@ -78,10 +80,13 @@ func main() {
 			coordsInt := [2]int{}
 			coordsInt[0], _ = strconv.Atoi(coords[0])
 			coordsInt[1], _ = strconv.Atoi(coords[1])
-			stb.PutMark(ctx, &pb.Action{
+			_, err = stb.PutMark(ctx, &pb.Action{
 				PlayerId: joinRsp.PlayerId,
 				Cell:     int32(coordsInt[0]*3 + coordsInt[1]),
 			})
+			if err != nil {
+				fmt.Printf("%v\n", err.Error())
+			}
 		} else {
 			fmt.Println("Waiting for the opposing player...")
 			time.Sleep(time.Second * 5)

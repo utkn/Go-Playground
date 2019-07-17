@@ -93,6 +93,13 @@ func (s *Server) PutMark(ctx context.Context, req *pb.Action) (*pb.GameState, er
 		return nil, errors.New("it's not your turn")
 	}
 
+	row := req.Cell / 3
+	col := req.Cell % 3
+
+	if Mark(gameInstance.Board[row][col]) != EMPTY {
+		return nil, errors.New("this cell is not available")
+	}
+
 	cells := [9]uint32{}
 
 	for i := range gameInstance.Board {
@@ -101,8 +108,6 @@ func (s *Server) PutMark(ctx context.Context, req *pb.Action) (*pb.GameState, er
 		}
 	}
 
-	row := req.Cell / 3
-	col := req.Cell % 3
 	gameInstance.Board[row][col] = Mark(req.PlayerId.Player + 1)
 	if checkBoard(gameInstance.Board, gameInstance.currentTurn) {
 		gameInstance.finished = true
